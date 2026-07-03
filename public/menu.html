@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control - Estudio Literario</title>
+    <!-- Fuentes Premium de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        // Validar sesión antes de que empiece a renderizarse el body
+        const usuario = localStorage.getItem('usuarioLogueado');
+        if (!usuario) {
+            window.location.href = '/login.html';
+        }
+        // Inicializar tema antes de renderizar
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
+    <style>
+        :root {
+            --bg-color: #0d0f12;
+            --panel-bg: rgba(21, 24, 28, 0.95);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --primary-red: #e74c3c;
+            --primary-hover: #c0392b;
+            --text-main: #f5f6fa;
+            --text-muted: #8a939f;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            --glow: 0 0 15px rgba(231, 76, 60, 0.2);
+            --accent-purple: #9b59b6;
+            --accent-blue: #3498db;
+            --gradient-start: #1b1f24;
+            --table-hover: rgba(255, 255, 255, 0.01);
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f5f6fa;
+            --panel-bg: rgba(255, 255, 255, 0.95);
+            --border-color: rgba(0, 0, 0, 0.08);
+            --primary-red: #d63031;
+            --primary-hover: #b3392b;
+            --text-main: #2c3e50;
+            --text-muted: #57606f;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --glow: 0 0 15px rgba(214, 48, 49, 0.1);
+            --accent-purple: #8e44ad;
+            --gradient-start: #e0e6ed;
+            --table-hover: rgba(0, 0, 0, 0.015);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: radial-gradient(circle at center, var(--gradient-start) 0%, var(--bg-color) 100%);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* Contenedor Principal */
+        .menu-container {
+            display: none;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--text-main);
+            font-size: 2rem;
+            margin-bottom: 5px;
+            text-shadow: var(--glow);
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        .welcome {
+            font-weight: 400;
+            color: var(--primary-red);
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            letter-spacing: 0.5px;
+            transition: color 0.3s;
+        }
+
+        .welcome strong {
+            font-weight: 700;
+            text-shadow: 0 0 8px rgba(231, 76, 60, 0.2);
+        }
+
+        /* Botones / Tarjetas de Juegos */
+        .games-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 35px;
+        }
+
+        .btn-juego {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(128, 128, 128, 0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 18px 25px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .btn-juego::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            transition: all 0.3s;
+        }
+
+        .btn-completar::before { background-color: var(--primary-red); }
+        .btn-sopa::before { background-color: var(--accent-purple); }
+
+        .btn-juego span.arrow {
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+            color: var(--text-muted);
+        }
+
+        /* Hover de Botones de Juego */
+        .btn-juego:hover {
+            background: rgba(128, 128, 128, 0.08);
+            transform: translateX(5px);
+            border-color: rgba(128, 128, 128, 0.2);
+        }
+
+        .btn-completar:hover {
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.15);
+        }
+
+        .btn-sopa:hover {
+            box-shadow: 0 6px 20px rgba(155, 89, 182, 0.15);
+        }
+
+        .btn-juego:hover span.arrow {
+            transform: translateX(5px);
+            color: var(--text-main);
+        }
+
+        /* --- SECCIÓN DEL RANKING --- */
+        .ranking-box {
+            margin-top: 20px;
+            background: rgba(128, 128, 128, 0.01);
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.15);
+        }
+
+        .ranking-box h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            color: var(--text-main);
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+            transition: color 0.3s;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 5px;
+        }
+
+        th, td {
+            padding: 12px 8px;
+            text-align: center;
+        }
+
+        th {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            border-bottom: 2px solid rgba(128, 128, 128, 0.15);
+            font-weight: 600;
+        }
+
+        td {
+            font-size: 0.95rem;
+            color: var(--text-main);
+            border-bottom: 1px solid rgba(128, 128, 128, 0.05);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Estilo para los primeros lugares */
+        .puesto-1 { color: #f1c40f; font-weight: 700; }
+        .puesto-2 { color: #bdc3c7; font-weight: 600; }
+        .puesto-3 { color: #e67e22; font-weight: 500; }
+
+        .btn-logout {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 30px;
+        }
+
+        .btn-logout:hover {
+            color: var(--primary-red);
+            border-color: rgba(231, 76, 60, 0.4);
+            background: rgba(231, 76, 60, 0.05);
+        }
+
+        /* Botón de tema flotante */
+        .btn-theme {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(128,128,128,0.03);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            font-size: 1.2rem;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .btn-theme:hover {
+            background: rgba(128,128,128,0.15);
+            transform: scale(1.08);
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Responsividad */
+        @media (max-width: 480px) {
+            .menu-container { padding: 25px 20px; }
+            h1 { font-size: 1.6rem; }
+            .btn-juego { padding: 14px 18px; font-size: 0.95rem; }
+        }
+    </style>
+</head>
+<body>
+
+<button id="theme-toggle" class="btn-theme" onclick="toggleTheme()" aria-label="Cambiar tema">🌙</button>
+
+<div class="menu-container" id="menu-container">
+    <h1>Estudio Literario</h1>
+    <div class="welcome" id="user-display"></div>
+
+    <!-- Advertencia de Modo Invitado -->
+    <div id="guest-warning" style="display: none; background: rgba(243, 156, 18, 0.1); border: 1px solid rgba(243, 156, 18, 0.25); color: #f39c12; padding: 12px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 25px; line-height: 1.4; text-align: left;">
+        ⚠️ Estás jugando en modo <strong>Invitado</strong>. Puedes divertirte y practicar, pero tus respuestas no guardarán puntos ni aparecerás en la tabla de posiciones histórica del ranking. ¡Crea una cuenta para registrar tu score!
+    </div>
+    
+    <div class="games-grid">
+        <a href="/completar.html" class="btn-juego btn-completar">
+            <span>📝 Completar Palabras</span>
+            <span class="arrow">→</span>
+        </a>
+        <a href="/sopa.html" class="btn-juego btn-sopa">
+            <span>🔍 Sopa de Letras</span>
+            <span class="arrow">→</span>
+        </a>
+    </div>
+    
+    <div class="ranking-box">
+        <h3>🏆 Tabla de Posiciones</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 25%;">Puesto</th>
+                    <th style="width: 50%; text-align: left; padding-left: 20px;">Jugador</th>
+                    <th style="width: 25%;">Puntos</th>
+                </tr>
+            </thead>
+            <tbody id="ranking-body">
+                <!-- Se inyecta por JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
+</div>
+
+<script>
+    // Mostrar el contenedor y aplicar las configuraciones de sesión
+    if (usuario) {
+        document.getElementById('menu-container').style.display = 'block';
+        document.getElementById('user-display').innerHTML = "¡Hola, <strong>" + usuario + "</strong>!";
+        
+        if (usuario === 'Invitado') {
+            document.getElementById('guest-warning').style.display = 'block';
+        }
+    }
+
+    async function cargarRanking() {
+        try {
+            const res = await fetch('/api/ranking');
+            const top = await res.json();
+            const tbody = document.getElementById('ranking-body');
+            tbody.innerHTML = '';
+            
+            if (top.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" style="color: var(--text-muted); font-size: 0.9rem; padding: 20px;">No hay registros de jugadores aún. ¡Sé el primero!</td></tr>`;
+                return;
+            }
+
+            top.forEach((jugador, index) => {
+                let puestoStr = `${index + 1}°`;
+                let clasePuesto = '';
+                
+                if (index === 0) {
+                    puestoStr = '👑';
+                    clasePuesto = 'puesto-1';
+                } else if (index === 1) {
+                    puestoStr = '🥈';
+                    clasePuesto = 'puesto-2';
+                } else if (index === 2) {
+                    puestoStr = '🥉';
+                    clasePuesto = 'puesto-3';
+                }
+                
+                // Resaltar al usuario logueado en la tabla (si no es Invitado)
+                const esUsuarioActual = usuario !== 'Invitado' && jugador.usuario.toLowerCase() === usuario.toLowerCase();
+                const estiloUsuarioActual = esUsuarioActual ? 'background: rgba(231, 76, 60, 0.1); border-radius: 4px; font-weight: bold; color:#fff;' : '';
+
+                tbody.innerHTML += `<tr style="${estiloUsuarioActual}">
+                    <td class="${clasePuesto}">${puestoStr}</td>
+                    <td style="text-align: left; padding-left: 20px;">${jugador.usuario}</td>
+                    <td style="font-weight: 600; color: ${esUsuarioActual ? 'var(--primary-red)' : 'var(--text-main)'}">${jugador.puntos} pts</td>
+                </tr>`;
+            });
+        } catch (e) {
+            console.error("Error al cargar ranking", e);
+        }
+    }
+
+    function logout() {
+        localStorage.clear();
+        window.location.href = '/';
+    }
+
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        document.getElementById('theme-toggle').innerText = newTheme === 'dark' ? '🌙' : '☀️';
+    }
+
+    // Sincronizar el botón al cargar
+    window.addEventListener('DOMContentLoaded', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+        document.getElementById('theme-toggle').innerText = currentTheme === 'dark' ? '🌙' : '☀️';
+    });
+
+    cargarRanking();
+</script>
+</body>
+</html>

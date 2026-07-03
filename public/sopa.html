@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sopa de Letras - Violencia y Poder</title>
+    <!-- Fuentes Premium de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        // Validar sesión antes de renderizar
+        const usuario = localStorage.getItem('usuarioLogueado');
+        if (!usuario) {
+            window.location.href = '/login.html';
+        }
+        const esInvitado = (usuario === 'Invitado');
+
+        // Inicializar tema antes de renderizar
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
+    <style>
+        :root {
+            --bg-color: #0d0f12;
+            --panel-bg: rgba(21, 24, 28, 0.95);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --primary-red: #e74c3c;
+            --primary-hover: #c0392b;
+            --text-main: #f5f6fa;
+            --text-muted: #8a939f;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            --glow: 0 0 15px rgba(231, 76, 60, 0.2);
+            --btn-green: #2ecc71;
+            --cell-bg: rgba(255, 255, 255, 0.02);
+            --cell-border: rgba(255, 255, 255, 0.05);
+            --gradient-start: #1b1f24;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f5f6fa;
+            --panel-bg: rgba(255, 255, 255, 0.95);
+            --border-color: rgba(0, 0, 0, 0.08);
+            --primary-red: #d63031;
+            --primary-hover: #b3392b;
+            --text-main: #2c3e50;
+            --text-muted: #57606f;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --glow: 0 0 15px rgba(214, 48, 49, 0.1);
+            --cell-bg: rgba(0, 0, 0, 0.015);
+            --cell-border: rgba(0, 0, 0, 0.07);
+            --gradient-start: #e0e6ed;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: radial-gradient(circle at center, var(--gradient-start) 0%, var(--bg-color) 100%);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            display: none; /* Se activa tras verificar sesión */
+            max-width: 600px;
+            width: 100%;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--text-main);
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            text-shadow: var(--glow);
+            letter-spacing: 0.5px;
+            transition: color 0.3s;
+        }
+
+        .subtitle {
+            color: var(--primary-red);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            transition: color 0.3s;
+        }
+
+        /* Grilla expandida a 12 columnas */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 4px;
+            margin: 20px 0;
+            user-select: none;
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            background-color: var(--cell-bg);
+            border: 1px solid var(--cell-border);
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.3s, border-color 0.3s;
+        }
+
+        .cell:hover {
+            background-color: rgba(128, 128, 128, 0.1);
+            border-color: rgba(128, 128, 128, 0.2);
+            transform: scale(1.05);
+        }
+
+        .cell.found {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            border-color: #2ecc71;
+            color: white;
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
+            cursor: default;
+            transform: scale(1);
+        }
+
+        .cell.selected {
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-hover) 100%) !important;
+            border-color: var(--primary-red) !important;
+            color: white !important;
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.4) !important;
+            transform: scale(1.08) !important;
+            z-index: 10;
+        }
+
+        /* Lista de Palabras */
+        .word-list {
+            text-align: left;
+            margin-top: 20px;
+            background: rgba(128, 128, 128, 0.01);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .word-list h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.05rem;
+            margin-bottom: 12px;
+            color: var(--text-main);
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid rgba(128, 128, 128, 0.15);
+            padding-bottom: 6px;
+            transition: color 0.3s;
+        }
+
+        .word-item {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            color: var(--text-main);
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            padding: 4px 0;
+        }
+
+        .word-item.crossed {
+            text-decoration: line-through;
+            color: var(--text-muted);
+            opacity: 0.55;
+        }
+
+        .word-item strong {
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+
+        .pista {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+            font-weight: 300;
+            transition: color 0.3s;
+        }
+
+        .btn-volver {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 10px 25px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 25px;
+            width: 100%;
+        }
+
+        .btn-volver:hover {
+            color: var(--text-main);
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Botón de tema flotante */
+        .btn-theme {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--cell-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            font-size: 1.2rem;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .btn-theme:hover {
+            background: rgba(128,128,128,0.15);
+            transform: scale(1.08);
+        }
+
+        /* --- MODAL DE VICTORIA --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(13, 15, 18, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-box {
+            background: var(--panel-bg);
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(231, 76, 60, 0.15);
+            animation: modalIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal-box h2 {
+            font-family: 'Cinzel', serif;
+            color: var(--btn-green);
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .modal-box p {
+            font-size: 1rem;
+            color: var(--text-main);
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .modal-points {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-red);
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid rgba(231, 76, 60, 0.2);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .btn-modal {
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-hover) 100%);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-modal:hover {
+            background: linear-gradient(135deg, #ff6b6b 0%, var(--primary-red) 100%);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.5);
+            transform: scale(1.02);
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Responsividad */
+        @media (max-width: 480px) {
+            .container { padding: 20px 15px; }
+            h1 { font-size: 1.4rem; }
+            .grid { gap: 2px; }
+            .cell { font-size: 10px; }
+            .modal-box { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<button id="theme-toggle" class="btn-theme" onclick="toggleTheme()" aria-label="Cambiar tema">🌙</button>
+
+<div class="container" id="game-container">
+    <h1>Sopa de Letras</h1>
+    <div class="subtitle">Nivel Experto: Horizontales, Verticales y Diagon</div>
+    
+    <div class="grid" id="sopa-grid"></div>
+
+    <div class="word-list">
+        <h3>Conceptos ocultos</h3>
+        <div id="lista-palabras"></div>
+    </div>
+
+    <button class="btn-volver" onclick="window.location.href='/menu.html'">← Volver al Menú</button>
+</div>
+
+<!-- Modal de Victoria -->
+<div class="modal-overlay" id="victory-modal">
+    <div class="modal-box">
+        <h2 id="victory-title">¡Victoria!</h2>
+        <p id="victory-text">Has descifrado todas las palabras ocultas.</p>
+        <div class="modal-points" id="victory-points">Registrando puntos...</div>
+        <button class="btn-modal" onclick="jugarOtraVez()" style="margin-bottom: 12px; background: linear-gradient(135deg, var(--btn-green) 0%, #27ae60 100%); box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);">Jugar otra ronda 🔄</button>
+        <button class="btn-modal" onclick="window.location.href='/menu.html'" style="background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid var(--border-color); box-shadow: none;">Volver al Menú</button>
+    </div>
+</div>
+
+<script>
+    // Mostrar juego si el login es correcto
+    if (usuario) {
+        document.getElementById('game-container').style.display = 'block';
+    }
+
+    const GRID_SIZE = 12;
+    let todasLasPalabrasSopa = [];
+    let palabrasObjetivo = [];
+    let grilla = Array(GRID_SIZE).fill(null).map(() => Array(GRID_SIZE).fill(''));
+    let seleccionadas = [];
+
+    // Direcciones posibles
+    const DIRECCIONES = [
+        [0, 1],   // Horizontal derecha
+        [0, -1],  // Horizontal izquierda
+        [1, 0],   // Vertical abajo
+        [-1, 0],  // Vertical arriba
+        [1, 1],   // Diagonal abajo-derecha
+        [-1, -1], // Diagonal arriba-izquierda
+        [1, -1],  // Diagonal abajo-izquierda
+        [-1, 1]   // Diagonal arriba-derecha
+    ];
+
+    async function iniciarSopa() {
+        try {
+            if (todasLasPalabrasSopa.length === 0) {
+                const res = await fetch('/api/juego');
+                const datos = await res.json();
+                todasLasPalabrasSopa = datos.sopa_letras;
+            }
+            
+            // Mezclar y elegir 8 palabras aleatorias
+            const mezcladas = todasLasPalabrasSopa
+                .slice()
+                .sort(() => Math.random() - 0.5);
+            
+            palabrasObjetivo = mezcladas
+                .slice(0, 8)
+                .map(p => ({ ...p, encontrada: false }));
+            
+            generarEstructuraSopa();
+            mostrarListaPalabras();
+            renderizarGrilla();
+        } catch (e) {
+            console.error("Error al cargar la sopa", e);
+        }
+    }
+
+    function generarEstructuraSopa() {
+        const colocadas = [];
+        palabrasObjetivo.forEach(pObj => {
+            const palabra = pObj.palabra.toUpperCase().replace(/\s/g, ''); // Sanitizar
+            let colocado = false;
+            let intentos = 0;
+
+            while (!colocado && intentos < 200) {
+                intentos++;
+                const dir = DIRECCIONES[Math.floor(Math.random() * DIRECCIONES.length)];
+                let r = Math.floor(Math.random() * GRID_SIZE);
+                let c = Math.floor(Math.random() * GRID_SIZE);
+
+                const finR = r + dir[0] * (palabra.length - 1);
+                const finC = c + dir[1] * (palabra.length - 1);
+
+                if (finR >= 0 && finR < GRID_SIZE && finC >= 0 && finC < GRID_SIZE) {
+                    let sePuede = true;
+                    
+                    for (let i = 0; i < palabra.length; i++) {
+                        const currR = r + dir[0] * i;
+                        const currC = c + dir[1] * i;
+                        if (grilla[currR][currC] !== '' && grilla[currR][currC] !== palabra[i]) {
+                            sePuede = false;
+                            break;
+                        }
+                    }
+
+                    if (sePuede) {
+                        for (let i = 0; i < palabra.length; i++) {
+                            grilla[r + dir[0] * i][c + dir[1] * i] = palabra[i];
+                        }
+                        colocado = true;
+                    }
+                }
+            }
+            if (colocado) {
+                colocadas.push(pObj);
+            }
+        });
+
+        // Actualizar la lista con solo las palabras que de verdad se pudieron colocar
+        palabrasObjetivo = colocadas;
+
+        // Rellenar vacíos con letras random
+        const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        for (let r = 0; r < GRID_SIZE; r++) {
+            for (let c = 0; c < GRID_SIZE; c++) {
+                if (grilla[r][c] === '') {
+                    grilla[r][c] = letras[Math.floor(Math.random() * letras.length)];
+                }
+            }
+        }
+    }
+
+    function renderizarGrilla() {
+        const gridDiv = document.getElementById('sopa-grid');
+        gridDiv.innerHTML = '';
+        for (let r = 0; r < GRID_SIZE; r++) {
+            for (let c = 0; c < GRID_SIZE; c++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                cell.innerText = grilla[r][c];
+                cell.dataset.row = r;
+                cell.dataset.col = c;
+                
+                cell.addEventListener('click', () => seleccionarLetra(cell, r, c));
+                gridDiv.appendChild(cell);
+            }
+        }
+    }
+
+    function seleccionarLetra(cell, r, c) {
+
+        const yaSeleccionadaIndex = seleccionadas.findIndex(p => p.r === r && p.c === c);
+
+        if (yaSeleccionadaIndex !== -1) {
+            // Deseleccionar a partir de la celda cliqueada hacia adelante
+            for (let i = seleccionadas.length - 1; i >= yaSeleccionadaIndex; i--) {
+                const p = seleccionadas[i];
+                const el = document.querySelector(`[data-row="${p.r}"][data-col="${p.c}"]`);
+                if (el) el.classList.remove('selected');
+            }
+            seleccionadas = seleccionadas.slice(0, yaSeleccionadaIndex);
+            verificarPalabraSeleccionada();
+            return;
+        }
+
+        // Si es la primera letra seleccionada
+        if (seleccionadas.length === 0) {
+            cell.classList.add('selected');
+            seleccionadas.push({ r, c, letra: grilla[r][c] });
+        } else if (seleccionadas.length === 1) {
+            // Comprobar si la segunda letra es adyacente a la primera
+            const last = seleccionadas[0];
+            const dr = r - last.r;
+            const dc = c - last.c;
+            
+            if (Math.abs(dr) <= 1 && Math.abs(dc) <= 1 && (dr !== 0 || dc !== 0)) {
+                cell.classList.add('selected');
+                seleccionadas.push({ r, c, letra: grilla[r][c], dr, dc });
+            } else {
+                // Si no es adyacente, limpiar y empezar una nueva selección con esta celda
+                limpiarSeleccionActual();
+                cell.classList.add('selected');
+                seleccionadas.push({ r, c, letra: grilla[r][c] });
+            }
+        } else {
+            // Comprobar si la nueva letra sigue la misma dirección establecida
+            const last = seleccionadas[seleccionadas.length - 1];
+            const firstDir = seleccionadas[1]; // contiene la dirección dr y dc
+            const dr = r - last.r;
+            const dc = c - last.c;
+
+            if (dr === firstDir.dr && dc === firstDir.dc) {
+                cell.classList.add('selected');
+                seleccionadas.push({ r, c, letra: grilla[r][c] });
+            } else {
+                // Si no sigue la misma dirección, limpiar y empezar nueva selección con esta celda
+                limpiarSeleccionActual();
+                cell.classList.add('selected');
+                seleccionadas.push({ r, c, letra: grilla[r][c] });
+            }
+        }
+
+        verificarPalabraSeleccionada();
+    }
+
+    function limpiarSeleccionActual() {
+        seleccionadas.forEach(p => {
+            const el = document.querySelector(`[data-row="${p.r}"][data-col="${p.c}"]`);
+            if (el) el.classList.remove('selected');
+        });
+        seleccionadas = [];
+    }
+
+    function verificarPalabraSeleccionada() {
+        const palabraFormada = seleccionadas.map(p => p.letra).join('');
+        const palabraInversa = palabraFormada.split('').reverse().join('');
+
+        palabrasObjetivo.forEach(pObj => {
+            if (!pObj.encontrada && (palabraFormada === pObj.palabra || palabraInversa === pObj.palabra)) {
+                pObj.encontrada = true;
+                
+                seleccionadas.forEach(p => {
+                    const el = document.querySelector(`[data-row="${p.r}"][data-col="${p.c}"]`);
+                    el.classList.remove('selected');
+                    el.classList.add('found');
+                });
+                seleccionadas = [];
+                mostrarListaPalabras();
+                verificarFinJuego();
+            }
+        });
+    }
+
+    function mostrarListaPalabras() {
+        const lista = document.getElementById('lista-palabras');
+        lista.innerHTML = '';
+        palabrasObjetivo.forEach(p => {
+            const item = document.createElement('div');
+            item.className = `word-item ${p.encontrada ? 'crossed' : ''}`;
+            item.innerHTML = `<strong>${p.palabra}</strong> <span class="pista">${p.pista}</span>`;
+            lista.appendChild(item);
+        });
+    }
+
+    async function verificarFinJuego() {
+        if (palabrasObjetivo.length > 0 && palabrasObjetivo.every(p => p.encontrada)) {
+            // Deshabilitar clics en la grilla
+            document.getElementById('sopa-grid').style.pointerEvents = 'none';
+
+            let mensajePuntos = "¡Has ganado +50 puntos para el ranking!";
+            
+            if (esInvitado) {
+                mensajePuntos = "Jugando en modo Invitado. Los puntos no se guardaron en el ranking. 😊";
+            } else {
+                // Generar un ID único en base a la lista ordenada de palabras seleccionadas en esta ronda
+                const listaPalabrasOrdenadas = palabrasObjetivo.map(p => p.palabra.toUpperCase()).sort();
+                const preguntaId = 'sopa_' + listaPalabrasOrdenadas.join('_');
+
+                try {
+                    const res = await fetch('/api/sumar-puntos', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            usuario: usuario,
+                            preguntaId: preguntaId
+                        })
+                    });
+                    const data = await res.json();
+                    if (data.success === false && data.mensaje) {
+                        mensajePuntos = "Ya habías obtenido los puntos de esta combinación de palabras anteriormente. 😊";
+                    }
+                } catch (e) {
+                    console.error("Error sumando puntos", e);
+                    mensajePuntos = "No se pudieron registrar los puntos.";
+                }
+            }
+
+            // Mostrar modal de victoria
+            setTimeout(() => {
+                document.getElementById('victory-title').innerText = "¡Sopa Completada! 🎉";
+                document.getElementById('victory-text').innerText = "Lograste descifrar toda la violencia y el poder político de la literatura del siglo XIX.";
+                document.getElementById('victory-points').innerText = mensajePuntos;
+                document.getElementById('victory-modal').style.display = 'flex';
+            }, 600);
+        }
+    }
+
+    function jugarOtraVez() {
+        // Cerrar modal
+        document.getElementById('victory-modal').style.display = 'none';
+        // Re-habilitar clics en la grilla
+        document.getElementById('sopa-grid').style.pointerEvents = 'auto';
+        // Resetear grilla y seleccionadas
+        seleccionadas = [];
+        grilla = Array(GRID_SIZE).fill(null).map(() => Array(GRID_SIZE).fill(''));
+        // Volver a iniciar
+        iniciarSopa();
+    }
+
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        document.getElementById('theme-toggle').innerText = newTheme === 'dark' ? '🌙' : '☀️';
+    }
+
+    // Sincronizar el botón al cargar
+    window.addEventListener('DOMContentLoaded', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+        document.getElementById('theme-toggle').innerText = currentTheme === 'dark' ? '🌙' : '☀️';
+    });
+
+    iniciarSopa();
+</script>
+</body>
+</html>

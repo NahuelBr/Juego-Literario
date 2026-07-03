@@ -1,0 +1,400 @@
+{
+  "sopa_letras": [
+    {
+      "palabra": "MAZORCA",
+      "pista": "Grupo parapolicial de Rosas que impone terror."
+    },
+    {
+      "palabra": "BARBARIE",
+      "pista": "Concepto asociado al campo y al caudillismo según Sarmiento."
+    },
+    {
+      "palabra": "CIVILIZACION",
+      "pista": "Modelo europeo y urbano defendido por Sarmiento."
+    },
+    {
+      "palabra": "LEVA",
+      "pista": "Reclutamiento forzado que sufrían los gauchos."
+    },
+    {
+      "palabra": "FORTIN",
+      "pista": "Lugar de frontera donde Martín Fierro es enviado."
+    },
+    {
+      "palabra": "FRONTERA",
+      "pista": "Límite de conflicto entre criollos e indígenas."
+    },
+    {
+      "palabra": "GAUCHO",
+      "pista": "Figura central de la literatura gauchesca."
+    },
+    {
+      "palabra": "PAYADA",
+      "pista": "Duelo oral y musical entre gauchos."
+    },
+    {
+      "palabra": "VIZCACHA",
+      "pista": "Viejo consejero de los hijos de Fierro."
+    },
+    {
+      "palabra": "MORENO",
+      "pista": "Payador rival de Fierro."
+    },
+    {
+      "palabra": "PULPERIA",
+      "pista": "Espacio típico de reunión gaucha."
+    },
+    {
+      "palabra": "DESIERTO",
+      "pista": "Territorio salvaje y vacío según Facundo."
+    },
+    {
+      "palabra": "MATADERO",
+      "pista": "Lugar central de la obra de Echeverría."
+    },
+    {
+      "palabra": "ROSAS",
+      "pista": "Gobernador cuya influencia domina dos de las obras."
+    },
+    {
+      "palabra": "QUIROGA",
+      "pista": "Caudillo riojano protagonista de Facundo."
+    },
+    {
+      "palabra": "CAUDILLO",
+      "pista": "Líder carismático y autoritario del interior."
+    },
+    {
+      "palabra": "UNITARIO",
+      "pista": "Opositor político perseguido por los federales."
+    },
+    {
+      "palabra": "FEDERAL",
+      "pista": "Partidario del régimen rosista."
+    },
+    {
+      "palabra": "PUNZO",
+      "pista": "Color distintivo del federalismo rosista."
+    },
+    {
+      "palabra": "TORO",
+      "pista": "Animal símbolo de resistencia en El Matadero."
+    },
+    {
+      "palabra": "SANGRE",
+      "pista": "Elemento recurrente de violencia y sacrificio."
+    },
+    {
+      "palabra": "EXILIO",
+      "pista": "Destino de muchos intelectuales opositores."
+    },
+    {
+      "palabra": "CAUTIVO",
+      "pista": "Situación de quienes eran tomados por indígenas."
+    },
+    {
+      "palabra": "INDIO",
+      "pista": "Figura del conflicto en Martín Fierro."
+    },
+    {
+      "palabra": "LANZA",
+      "pista": "Arma común en combates gauchos e indígenas."
+    },
+    {
+      "palabra": "BOLEADORAS",
+      "pista": "Herramienta y arma típica del gaucho."
+    },
+    {
+      "palabra": "CABALLO",
+      "pista": "Compañero inseparable del gaucho."
+    },
+    {
+      "palabra": "RANCHO",
+      "pista": "Vivienda humilde del gaucho."
+    },
+    {
+      "palabra": "PAMPA",
+      "pista": "Territorio extenso del interior argentino."
+    },
+    {
+      "palabra": "LLANOS",
+      "pista": "Región vinculada a Facundo Quiroga."
+    },
+    {
+      "palabra": "TIGRE",
+      "pista": "Apodo simbólico de Quiroga."
+    },
+    {
+      "palabra": "JUSTICIA",
+      "pista": "Valor ausente en la vida de Fierro."
+    },
+    {
+      "palabra": "INJUSTICIA",
+      "pista": "Condición constante que denuncia Hernández."
+    },
+    {
+      "palabra": "GUITARRA",
+      "pista": "Instrumento fundamental en la payada."
+    },
+    {
+      "palabra": "CANTO",
+      "pista": "Forma narrativa de Martín Fierro."
+    },
+    {
+      "palabra": "GAUCHESCA",
+      "pista": "Género literario al que pertenece Martín Fierro."
+    },
+    {
+      "palabra": "MATANZA",
+      "pista": "Violencia colectiva presente en El Matadero."
+    },
+    {
+      "palabra": "DICTADURA",
+      "pista": "Forma de gobierno criticada por Echeverría."
+    },
+    {
+      "palabra": "PROGRESO",
+      "pista": "Ideal de modernización en Facundo."
+    },
+    {
+      "palabra": "EUROPA",
+      "pista": "Modelo cultural admirado por Sarmiento."
+    },
+    {
+      "palabra": "CIUDAD",
+      "pista": "Espacio asociado a la civilización."
+    },
+    {
+      "palabra": "CAMPO",
+      "pista": "Espacio asociado a la barbarie."
+    },
+    {
+      "palabra": "MATAR",
+      "pista": "Acción frecuente en los conflictos de las obras."
+    },
+    {
+      "palabra": "LIBERTAD",
+      "pista": "Valor defendido por unitarios y gauchos."
+    },
+    {
+      "palabra": "OPRESION",
+      "pista": "Forma de control político y social."
+    },
+    {
+      "palabra": "TIRANIA",
+      "pista": "Crítica al régimen rosista."
+    }
+  ],
+  "completar_palabras": [
+    {
+      "texto": "Martín Fierro es llevado por la _______ al fortín para pelear en la frontera.",
+      "respuesta": "leva",
+      "pista": "Reclutamiento forzado."
+    },
+    {
+      "texto": "En Facundo, la oposición principal es _______ y barbarie.",
+      "respuesta": "civilizacion",
+      "pista": "Representa la ciudad y Europa."
+    },
+    {
+      "texto": "El joven _______ de El Matadero resiste hasta la muerte.",
+      "respuesta": "unitario",
+      "pista": "Representa la oposición política."
+    },
+    {
+      "texto": "El Viejo _______ da consejos prácticos a los hijos de Fierro.",
+      "respuesta": "vizcacha",
+      "pista": "Personaje pícaro y experimentado."
+    },
+    {
+      "texto": "Facundo Quiroga es conocido como el Tigre de los _______.",
+      "respuesta": "llanos",
+      "pista": "Región riojana."
+    },
+    {
+      "texto": "La divisa _______ identificaba a los federales.",
+      "respuesta": "punzo",
+      "pista": "Color rojo característico."
+    },
+    {
+      "texto": "El _______ en El Matadero simboliza rebeldía y violencia.",
+      "respuesta": "toro",
+      "pista": "Animal sacrificado."
+    },
+    {
+      "texto": "Martín Fierro pertenece a la literatura _______.",
+      "respuesta": "gauchesca",
+      "pista": "Género típico argentino."
+    },
+    {
+      "texto": "El _______ es el principal compañero del gaucho.",
+      "respuesta": "caballo",
+      "pista": "Animal esencial."
+    },
+    {
+      "texto": "El lugar de reunión social del gaucho era la _______.",
+      "respuesta": "pulperia",
+      "pista": "Lugar de encuentro y bebida."
+    },
+    {
+      "texto": "La _______ representa el control violento del rosismo.",
+      "respuesta": "mazorca",
+      "pista": "Grupo represivo."
+    },
+    {
+      "texto": "Martín Fierro pierde su _______ al volver y hallar su hogar destruido.",
+      "respuesta": "rancho",
+      "pista": "Su casa."
+    },
+    {
+      "texto": "Facundo critica la influencia del _______ sobre las masas rurales.",
+      "respuesta": "caudillo",
+      "pista": "Líder del interior."
+    },
+    {
+      "texto": "En la payada, Fierro demuestra su habilidad con la _______.",
+      "respuesta": "guitarra",
+      "pista": "Instrumento musical."
+    },
+    {
+      "texto": "El Matadero es una alegoría de la _______ rosista.",
+      "respuesta": "dictadura",
+      "pista": "Gobierno autoritario."
+    },
+    {
+      "texto": "La obra Facundo fue escrita por _______.",
+      "respuesta": "sarmiento",
+      "pista": "Autor y presidente."
+    },
+    {
+      "texto": "Martín Fierro fue escrito por _______.",
+      "respuesta": "hernandez",
+      "pista": "Apellido del autor."
+    },
+    {
+      "texto": "El Matadero fue escrito por _______.",
+      "respuesta": "echeverria",
+      "pista": "Autor romántico."
+    },
+    {
+      "texto": "El espacio opuesto a la ciudad en Facundo es el _______.",
+      "respuesta": "campo",
+      "pista": "Lugar asociado a barbarie."
+    },
+    {
+      "texto": "Martín Fierro denuncia la constante _______ sufrida por los gauchos.",
+      "respuesta": "injusticia",
+      "pista": "Falta de equidad."
+    },
+    {
+      "texto": "El _______ es símbolo de libertad y movilidad del gaucho.",
+      "respuesta": "caballo",
+      "pista": "Animal compañero."
+    },
+    {
+      "texto": "Facundo Quiroga es presentado como un líder _______.",
+      "respuesta": "caudillo",
+      "pista": "Figura política fuerte."
+    },
+    {
+      "texto": "La _______ punzó era símbolo obligatorio del federalismo.",
+      "respuesta": "divisa",
+      "pista": "Insignia política."
+    },
+    {
+      "texto": "En El Matadero, la _______ es una imagen constante de violencia.",
+      "respuesta": "sangre",
+      "pista": "Elemento rojo derramado."
+    },
+    {
+      "texto": "Martín Fierro vive en la _______ argentina, espacio abierto y rural.",
+      "respuesta": "pampa",
+      "pista": "Gran llanura."
+    },
+    {
+      "texto": "El duelo de Fierro y el Moreno se da en forma de _______.",
+      "respuesta": "payada",
+      "pista": "Improvisación cantada."
+    },
+    {
+      "texto": "Sarmiento admiraba a _______ como modelo cultural.",
+      "respuesta": "europa",
+      "pista": "Continente."
+    },
+    {
+      "texto": "La _______ es el espacio asociado al progreso en Facundo.",
+      "respuesta": "ciudad",
+      "pista": "Opuesta al campo."
+    },
+    {
+      "texto": "El régimen de Rosas es criticado por su carácter de _______.",
+      "respuesta": "tirania",
+      "pista": "Gobierno opresivo."
+    },
+    {
+      "texto": "Martín Fierro combate con _______ y cuchillo.",
+      "respuesta": "lanza",
+      "pista": "Arma larga."
+    },
+    {
+      "texto": "Las _______ eran usadas por gauchos para cazar o pelear.",
+      "respuesta": "boleadoras",
+      "pista": "Arma de tres bolas."
+    },
+    {
+      "texto": "Facundo asocia el _______ con la barbarie y la vida rural.",
+      "respuesta": "campo",
+      "pista": "Espacio abierto."
+    },
+    {
+      "texto": "El joven unitario representa la _______ frente al poder federal.",
+      "respuesta": "libertad",
+      "pista": "Valor político."
+    },
+    {
+      "texto": "Martín Fierro termina viviendo entre los _______.",
+      "respuesta": "indios",
+      "pista": "Pueblos originarios."
+    },
+    {
+      "texto": "La _______ es el arte de improvisar versos cantados.",
+      "respuesta": "payada",
+      "pista": "Duelo musical."
+    },
+    {
+      "texto": "Facundo describe al desierto como espacio de _______.",
+      "respuesta": "barbarie",
+      "pista": "Concepto central."
+    },
+    {
+      "texto": "El Matadero fue escrito durante el período de _______.",
+      "respuesta": "rosas",
+      "pista": "Apellido del gobernador."
+    },
+    {
+      "texto": "Martín Fierro narra su historia en forma de _______.",
+      "respuesta": "canto",
+      "pista": "Cada parte del poema."
+    },
+    {
+      "texto": "La vida del gaucho estaba marcada por la _______ estatal.",
+      "respuesta": "opresion",
+      "pista": "Control injusto."
+    },
+    {
+      "texto": "Facundo Quiroga gobernaba mediante su _______ personal.",
+      "respuesta": "poder",
+      "pista": "Capacidad de mando."
+    },
+    {
+      "texto": "El Matadero representa una crítica a la _______ política.",
+      "respuesta": "violencia",
+      "pista": "Uso de la fuerza."
+    },
+    {
+      "texto": "El _______ es una figura central en la identidad nacional argentina.",
+      "respuesta": "gaucho",
+      "pista": "Protagonista rural."
+    }
+  ]
+}

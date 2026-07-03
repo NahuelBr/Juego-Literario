@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego Literario Argentino - Siglo XIX</title>
+    <!-- Fuentes Premium de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script>
+        // Inicializar tema antes de renderizar para evitar parpadeos
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
+    <style>
+        :root {
+            --bg-color: #0d0f12;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --border-glow: rgba(231, 76, 60, 0.25);
+            --primary-red: #e74c3c;
+            --primary-hover: #c0392b;
+            --text-main: #f5f6fa;
+            --text-muted: #a0a8b3;
+            --gradient-start: #1b1f24;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f5f6fa;
+            --card-bg: rgba(0, 0, 0, 0.02);
+            --border-color: rgba(0, 0, 0, 0.08);
+            --border-glow: rgba(214, 48, 49, 0.15);
+            --primary-red: #d63031;
+            --primary-hover: #b3392b;
+            --text-main: #2c3e50;
+            --text-muted: #57606f;
+            --gradient-start: #e0e6ed;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: radial-gradient(circle at center, var(--gradient-start) 0%, var(--bg-color) 100%);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 700px;
+            padding: 40px 20px;
+            z-index: 10;
+        }
+
+        /* Títulos de época */
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: var(--text-main);
+            text-transform: uppercase;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), 0 0 15px rgba(231, 76, 60, 0.15);
+            margin-bottom: 12px;
+            animation: fadeInDown 1s ease-out;
+            transition: color 0.3s;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            font-weight: 300;
+            margin-bottom: 40px;
+            letter-spacing: 0.5px;
+            animation: fadeIn 1.2s ease-out;
+            transition: color 0.3s;
+        }
+
+        /* --- ESTRUCTURA DEL TRIÁNGULO LITERARIO --- */
+        .contenedor-triangulo {
+            display: grid;
+            grid-template-areas: 
+                ". cima ."
+                "izq . der";
+            grid-gap: 20px 40px;
+            justify-content: center;
+            align-items: center;
+            max-width: 500px;
+            margin: 0 auto 50px auto;
+            animation: scaleIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .portada {
+            width: 140px;
+            height: 210px;
+            background: #15181c;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+        }
+
+        .portada::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 8px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.4);
+            pointer-events: none;
+            transition: opacity 0.4s;
+        }
+
+        .portada img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(20%) contrast(110%);
+            transition: filter 0.4s;
+        }
+
+        /* Áreas de Grilla */
+        .obra-cima {
+            grid-area: cima;
+            animation: floatCima 5s ease-in-out infinite;
+        }
+
+        .obra-izquierda {
+            grid-area: izq;
+            animation: floatIzq 6s ease-in-out infinite 0.5s;
+        }
+
+        .obra-derecha {
+            grid-area: der;
+            animation: floatDer 5.5s ease-in-out infinite 1s;
+        }
+
+        /* Hover de Portadas */
+        .portada:hover {
+            transform: translateY(-10px) scale(1.08) rotate(1deg);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.6), 0 0 25px var(--border-glow);
+            z-index: 100;
+        }
+
+        .portada:hover img {
+            filter: grayscale(0%) contrast(100%);
+        }
+
+        /* Botón de Ingreso */
+        .btn-jugar {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-hover) 100%);
+            color: #fff;
+            border: none;
+            padding: 16px 45px;
+            font-size: 1.05rem;
+            border-radius: 30px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 8px 20px rgba(231, 76, 60, 0.25), 0 0 1px 1px rgba(255, 255, 255, 0.05);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: fadeInUp 1.4s ease-out;
+        }
+
+        .btn-jugar:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #ff6b6b 0%, var(--primary-red) 100%);
+            box-shadow: 0 12px 25px rgba(231, 76, 60, 0.4), 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-jugar:active {
+            transform: scale(0.98);
+        }
+
+        /* Botón de tema flotante */
+        .btn-theme {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            font-size: 1.2rem;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .btn-theme:hover {
+            background: rgba(128,128,128,0.15);
+            transform: scale(1.08);
+        }
+
+        /* --- ANIMACIONES --- */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes floatCima {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        @keyframes floatIzq {
+            0%, 100% { transform: translateY(0) rotate(-1deg); }
+            50% { transform: translateY(-6px) rotate(0deg); }
+        }
+
+        @keyframes floatDer {
+            0%, 100% { transform: translateY(0) rotate(1deg); }
+            50% { transform: translateY(-7px) rotate(0deg); }
+        }
+
+        /* Responsividad */
+        @media (max-width: 480px) {
+            h1 { font-size: 2rem; }
+            p { font-size: 0.95rem; }
+            .contenedor-triangulo {
+                grid-gap: 15px 20px;
+            }
+            .portada {
+                width: 100px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <button id="theme-toggle" class="btn-theme" onclick="toggleTheme()" aria-label="Cambiar tema">🌙</button>
+
+    <div class="container">
+        <h1>Trivia Literaria: Siglo XIX</h1>
+        <p>¿Listo para enfrentarte a la grieta entre Civilización y Barbarie?</p>
+
+        <div class="contenedor-triangulo">
+            <div class="portada obra-cima">
+                <img src="/img/facundo.jpg" alt="Facundo - Sarmiento">
+            </div>
+            
+            <div class="portada obra-izquierda">
+                <img src="/img/elmatadero.jpg" alt="El Matadero - Echeverría">
+            </div>
+            
+            <div class="portada obra-derecha">
+                <img src="/img/martinfierro.jpg" alt="Martín Fierro - José Hernández">
+            </div>
+        </div>
+
+        <div class="acciones">
+            <button class="btn-jugar" onclick="ingresar()">Ingresar al Juego</button>
+        </div>
+    </div>
+
+    <script>
+        function ingresar() {
+            const usuario = localStorage.getItem('usuarioLogueado');
+            if (usuario) {
+                window.location.href = '/menu.html';
+            } else {
+                window.location.href = '/login.html';
+            }
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            document.getElementById('theme-toggle').innerText = newTheme === 'dark' ? '🌙' : '☀️';
+        }
+
+        // Sincronizar el botón al cargar
+        window.addEventListener('DOMContentLoaded', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+            document.getElementById('theme-toggle').innerText = currentTheme === 'dark' ? '🌙' : '☀️';
+        });
+    </script>
+</body>
+</html>

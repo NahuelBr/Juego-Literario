@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Completar Palabras - Violencia y Poder</title>
+    <!-- Fuentes Premium de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        // Validar sesión antes de renderizar
+        const usuario = localStorage.getItem('usuarioLogueado');
+        if (!usuario) {
+            window.location.href = '/login.html';
+        }
+        const esInvitado = (usuario === 'Invitado');
+        
+        // Inicializar tema antes de renderizar
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
+    <style>
+        :root {
+            --bg-color: #0d0f12;
+            --panel-bg: rgba(21, 24, 28, 0.95);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --primary-red: #e74c3c;
+            --primary-hover: #c0392b;
+            --text-main: #f5f6fa;
+            --text-muted: #8a939f;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            --glow: 0 0 15px rgba(231, 76, 60, 0.2);
+            --btn-green: #2ecc71;
+            --btn-green-hover: #27ae60;
+            --btn-orange: #f39c12;
+            --btn-orange-hover: #d35400;
+            --gradient-start: #1b1f24;
+            --input-bg: rgba(255, 255, 255, 0.02);
+            --quote-bg: rgba(255, 255, 255, 0.02);
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f5f6fa;
+            --panel-bg: rgba(255, 255, 255, 0.95);
+            --border-color: rgba(0, 0, 0, 0.08);
+            --primary-red: #d63031;
+            --primary-hover: #b3392b;
+            --text-main: #2c3e50;
+            --text-muted: #57606f;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --glow: 0 0 15px rgba(214, 48, 49, 0.1);
+            --gradient-start: #e0e6ed;
+            --input-bg: rgba(0, 0, 0, 0.01);
+            --quote-bg: rgba(0, 0, 0, 0.015);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: radial-gradient(circle at center, var(--gradient-start) 0%, var(--bg-color) 100%);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .box {
+            display: none; /* Se activa tras verificar sesión */
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+
+        h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.6rem;
+            color: var(--text-main);
+            margin-bottom: 25px;
+            text-shadow: var(--glow);
+            letter-spacing: 0.5px;
+            transition: color 0.3s;
+        }
+
+        .progress {
+            font-size: 0.85rem;
+            color: var(--primary-red);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            transition: color 0.3s;
+        }
+
+        .frase {
+            background: var(--quote-bg);
+            border-left: 4px solid var(--primary-red);
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 25px;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            text-align: left;
+            color: var(--text-main);
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
+            transition: background 0.3s, border-color 0.3s, color 0.3s;
+        }
+
+        input {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            font-size: 1rem;
+            padding: 14px 18px;
+            border-radius: 10px;
+            outline: none;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            background: rgba(128,128,128,0.05);
+            border-color: rgba(231, 76, 60, 0.5);
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.15);
+        }
+
+        .btn-g, .btn-o {
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: #fff;
+            border: none;
+            padding: 14px;
+            font-size: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-bottom: 12px;
+        }
+
+        .btn-g {
+            background: linear-gradient(135deg, var(--btn-green) 0%, var(--btn-green-hover) 100%);
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.2);
+        }
+
+        .btn-g:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.35);
+        }
+
+        .btn-o {
+            background: linear-gradient(135deg, var(--btn-orange) 0%, var(--btn-orange-hover) 100%);
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.2);
+        }
+
+        .btn-o:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(243, 156, 18, 0.35);
+        }
+
+        .resultado {
+            margin-top: 15px;
+            font-weight: 600;
+            font-size: 1.05rem;
+            min-height: 25px;
+            transition: all 0.3s;
+        }
+
+        .correcto {
+            color: var(--btn-green);
+            animation: pulseGreen 1s;
+        }
+
+        .incorrecto {
+            color: var(--primary-red);
+            animation: shake 0.5s;
+        }
+
+        .btn-volver {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 25px;
+        }
+
+        .btn-volver:hover {
+            color: var(--text-main);
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Botón de tema flotante */
+        .btn-theme {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            font-size: 1.2rem;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .btn-theme:hover {
+            background: rgba(128,128,128,0.15);
+            transform: scale(1.08);
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        @keyframes pulseGreen {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsividad */
+        @media (max-width: 480px) {
+            .box { padding: 25px 20px; }
+            h2 { font-size: 1.3rem; }
+            .frase { font-size: 0.95rem; }
+        }
+    </style>
+</head>
+<body>
+
+<button id="theme-toggle" class="btn-theme" onclick="toggleTheme()" aria-label="Cambiar tema">🌙</button>
+
+<div class="box" id="game-box">
+    <h2>Violencia y Poder Político</h2>
+    <div class="progress" id="progress-indicator">Pregunta X de Y</div>
+    <div class="frase" id="frase">Cargando fragmento literario...</div>
+    <input type="text" id="respuesta-usuario" placeholder="Completa la palabra faltante" autocomplete="off">
+    <button class="btn-g" onclick="verificarRespuesta()">Enviar Respuesta</button>
+    <button class="btn-o" onclick="pedirPista()">Pedir Pista 💡</button>
+    <div id="resultado" class="resultado"></div>
+    <button id="btn-rejugabilidad" class="btn-g" onclick="iniciarRonda()" style="display: none; margin-top: 15px; background: linear-gradient(135deg, var(--btn-orange) 0%, var(--btn-orange-hover) 100%); box-shadow: 0 4px 15px rgba(243, 156, 18, 0.2);">Jugar otra ronda 🔄</button>
+    <br>
+    <button class="btn-volver" onclick="window.location.href='/menu.html'">← Volver al Menú</button>
+</div>
+
+<script>
+    // Mostrar la caja si se ha verificado la sesión
+    if (usuario) {
+        document.getElementById('game-box').style.display = 'block';
+    }
+
+    let todasLasPreguntas = [];
+    let preguntasSesion = [];
+    let indiceActualDeSesion = 0;
+    const LIMITE_PREGUNTAS_SESION = 5;
+
+    async function cargarJuego() {
+        try {
+            const res = await fetch('/api/juego');
+            const datos = await res.json();
+            todasLasPreguntas = datos.completar_palabras;
+            iniciarRonda();
+        } catch (err) {
+            document.getElementById('frase').innerText = "Error al conectar con el servidor.";
+            document.getElementById('frase').style.color = "var(--primary-red)";
+        }
+    }
+
+    function iniciarRonda() {
+        if (todasLasPreguntas.length === 0) return;
+        
+        indiceActualDeSesion = 0;
+        
+        const copiaMezclada = todasLasPreguntas
+            .map((p, index) => ({ ...p, indexOriginal: index }))
+            .sort(() => Math.random() - 0.5);
+            
+        preguntasSesion = copiaMezclada.slice(0, Math.min(LIMITE_PREGUNTAS_SESION, todasLasPreguntas.length));
+        
+        document.getElementById('btn-rejugabilidad').style.display = "none";
+        
+        mostrarPregunta();
+    }
+
+    function mostrarPregunta() {
+        const input = document.getElementById('respuesta-usuario');
+        const submitBtn = document.querySelector('.btn-g:not(#btn-rejugabilidad)');
+        const hintBtn = document.querySelector('.btn-o');
+        const prog = document.getElementById('progress-indicator');
+        
+        if (indiceActualDeSesion < preguntasSesion.length) {
+            const pregunta = preguntasSesion[indiceActualDeSesion];
+            prog.innerText = `Pregunta ${indiceActualDeSesion + 1} de ${preguntasSesion.length}`;
+            document.getElementById('frase').innerText = pregunta.texto;
+            input.value = "";
+            input.style.display = "block";
+            submitBtn.style.display = "block";
+            hintBtn.style.display = "block";
+            document.getElementById('resultado').innerText = "";
+            document.getElementById('resultado').className = "resultado";
+        } else {
+            prog.innerText = "Ronda Completada";
+            document.getElementById('frase').innerText = "¡Excelente! Has terminado esta ronda de preguntas. ¿Quieres seguir compitiendo?";
+            input.style.display = "none";
+            submitBtn.style.display = "none";
+            hintBtn.style.display = "none";
+            document.getElementById('resultado').className = "resultado correcto";
+            document.getElementById('resultado').innerText = "¡Ronda finalizada! 🎉";
+            document.getElementById('btn-rejugabilidad').style.display = "block";
+        }
+    }
+
+    async function verificarRespuesta() {
+        const txt = document.getElementById('respuesta-usuario').value.trim();
+        const div = document.getElementById('resultado');
+        
+        if (!txt) {
+            div.className = "resultado incorrecto";
+            div.innerText = "Por favor, escribe una respuesta.";
+            return;
+        }
+
+        const preguntaActual = preguntasSesion[indiceActualDeSesion];
+
+        try {
+            const res = await fetch('/api/verificar-completar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: preguntaActual.indexOriginal, respuestaUsuario: txt, pedirPista: false })
+            });
+            const r = await res.json();
+
+            if (r.correcto) {
+                div.className = "resultado correcto";
+                
+                if (esInvitado) {
+                    div.innerText = "¡Correcto! (Jugando en modo Invitado - Puntos no guardados) 🎉";
+                } else {
+                    div.innerText = "¡Correcto! +10 puntos. 🎉";
+                    
+                    const pointsRes = await fetch('/api/sumar-puntos', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            usuario: usuario,
+                            preguntaId: 'completar_' + preguntaActual.indexOriginal
+                        })
+                    });
+                    
+                    const pointsData = await pointsRes.json();
+                    if (pointsData.success === false && pointsData.mensaje) {
+                        div.innerText = "¡Correcto! (Puntos ya obtenidos anteriormente) 😊";
+                    }
+                }
+
+                indiceActualDeSesion++;
+                setTimeout(mostrarPregunta, 2200);
+            } else {
+                div.className = "resultado incorrecto";
+                div.innerText = "Inténtalo de nuevo. ❌";
+            }
+        } catch (e) {
+            div.className = "resultado incorrecto";
+            div.innerText = "Error al verificar la respuesta.";
+        }
+    }
+
+    async function pedirPista() {
+        const div = document.getElementById('resultado');
+        const preguntaActual = preguntasSesion[indiceActualDeSesion];
+
+        try {
+            const res = await fetch('/api/verificar-completar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: preguntaActual.indexOriginal, respuestaUsuario: "", pedirPista: true })
+            });
+            const r = await res.json();
+            div.className = "resultado";
+            div.style.color = "var(--btn-orange)";
+            div.innerText = "Pista: " + r.pista;
+        } catch (e) {
+            div.className = "resultado incorrecto";
+            div.innerText = "Error al solicitar pista.";
+        }
+    }
+
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        document.getElementById('theme-toggle').innerText = newTheme === 'dark' ? '🌙' : '☀️';
+    }
+
+    // Sincronizar el botón al cargar
+    window.addEventListener('DOMContentLoaded', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+        document.getElementById('theme-toggle').innerText = currentTheme === 'dark' ? '🌙' : '☀️';
+    });
+
+    window.onload = cargarJuego;
+</script>
+</body>
+</html>

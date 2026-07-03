@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingreso al Juego - Estudio Literario</title>
+    <!-- Fuentes Premium de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        // Inicializar tema antes de renderizar
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
+    <style>
+        :root {
+            --bg-color: #0d0f12;
+            --panel-bg: rgba(21, 24, 28, 0.95);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --primary-red: #e74c3c;
+            --primary-hover: #c0392b;
+            --text-main: #f5f6fa;
+            --text-muted: #8a939f;
+            --shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            --glow: 0 0 15px rgba(231, 76, 60, 0.2);
+            --btn-alt: #2ecc71;
+            --btn-alt-hover: #27ae60;
+            --gradient-start: #1b1f24;
+            --input-bg: rgba(255, 255, 255, 0.02);
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f5f6fa;
+            --panel-bg: rgba(255, 255, 255, 0.95);
+            --border-color: rgba(0, 0, 0, 0.08);
+            --primary-red: #d63031;
+            --primary-hover: #b3392b;
+            --text-main: #2c3e50;
+            --text-muted: #57606f;
+            --shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            --glow: 0 0 15px rgba(214, 48, 49, 0.1);
+            --btn-alt: #2ecc71;
+            --btn-alt-hover: #27ae60;
+            --gradient-start: #e0e6ed;
+            --input-bg: rgba(0, 0, 0, 0.01);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: radial-gradient(circle at center, var(--gradient-start) 0%, var(--bg-color) 100%);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .box {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            padding: 40px 35px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            max-width: 420px;
+            width: 100%;
+            animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--text-main);
+            font-size: 2rem;
+            margin-bottom: 5px;
+            text-shadow: var(--glow);
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-weight: 300;
+            transition: color 0.3s;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        input {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            font-size: 0.95rem;
+            padding: 14px 18px;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        input:focus {
+            background: rgba(128,128,128,0.05);
+            border-color: rgba(231, 76, 60, 0.5);
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.15);
+        }
+
+        input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.5;
+        }
+
+        button {
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #fff;
+            border: none;
+            padding: 14px;
+            font-size: 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-bottom: 12px;
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-hover) 100%);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.2);
+        }
+
+        .btn-login:hover {
+            background: linear-gradient(135deg, #ff6b6b 0%, var(--primary-red) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.35);
+        }
+
+        .btn-register {
+            background: transparent;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            color: var(--btn-alt);
+        }
+
+        .btn-register:hover {
+            background: rgba(46, 204, 113, 0.06);
+            border-color: var(--btn-alt);
+            transform: translateY(-2px);
+        }
+
+        .btn-guest {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+
+        .btn-guest:hover {
+            background: rgba(128,128,128,0.06);
+            border-color: var(--text-muted);
+            color: var(--text-main);
+            transform: translateY(-2px);
+        }
+
+        .btn-back {
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: color 0.3s;
+            text-transform: uppercase;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            width: auto;
+        }
+
+        .btn-back:hover {
+            color: var(--text-main);
+        }
+
+        /* Botón de tema flotante */
+        .btn-theme {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            font-size: 1.2rem;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .btn-theme:hover {
+            background: rgba(128,128,128,0.15);
+            transform: scale(1.08);
+        }
+
+        .msg {
+            margin-top: 15px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--primary-red);
+            min-height: 20px;
+            transition: all 0.3s;
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+<button id="theme-toggle" class="btn-theme" onclick="toggleTheme()" aria-label="Cambiar tema">🌙</button>
+
+<div class="box">
+    <h1>Estudio Literario</h1>
+    <p>Inicia sesión o regístrate para competir en el ranking</p>
+    
+    <div class="input-group">
+        <input type="text" id="user" placeholder="Nombre de usuario" autocomplete="off">
+    </div>
+    <div class="input-group">
+        <input type="password" id="pass" placeholder="Contraseña">
+    </div>
+    
+    <button class="btn-login" onclick="login()">Ingresar 🚀</button>
+    <button class="btn-register" onclick="registro()">Registrarse ✨</button>
+    <button class="btn-guest" onclick="entrarInvitado()">Ingresar como Invitado 👤</button>
+    
+    <div id="mensaje" class="msg"></div>
+
+    <button class="btn-back" onclick="window.location.href='/'">← Volver al Inicio</button>
+</div>
+
+<script>
+    async function login() {
+        const usuario = document.getElementById('user').value.trim();
+        const password = document.getElementById('pass').value.trim();
+        const msgDiv = document.getElementById('mensaje');
+        
+        if (!usuario || !password) {
+            msgDiv.innerText = "Por favor ingresa todos los campos.";
+            msgDiv.style.color = 'var(--primary-red)';
+            return;
+        }
+
+        try {
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ usuario, password })
+            });
+            const datos = await res.json();
+            if (datos.success) {
+                localStorage.setItem('usuarioLogueado', datos.usuario);
+                window.location.href = '/menu.html';
+            } else {
+                msgDiv.innerText = datos.error;
+                msgDiv.style.color = 'var(--primary-red)';
+            }
+        } catch (e) {
+            msgDiv.innerText = "Error en el servidor. Inténtalo más tarde.";
+            msgDiv.style.color = 'var(--primary-red)';
+        }
+    }
+
+    async function registro() {
+        const usuario = document.getElementById('user').value.trim();
+        const password = document.getElementById('pass').value.trim();
+        const msgDiv = document.getElementById('mensaje');
+
+        if (!usuario || !password) {
+            msgDiv.innerText = "Por favor ingresa todos los campos.";
+            msgDiv.style.color = 'var(--primary-red)';
+            return;
+        }
+
+        try {
+            const res = await fetch('/api/registro', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ usuario, password })
+            });
+            const datos = await res.json();
+            msgDiv.innerText = datos.mensaje || datos.error;
+            if (datos.success) {
+                msgDiv.style.color = 'var(--btn-alt)';
+            } else {
+                msgDiv.style.color = 'var(--primary-red)';
+            }
+        } catch (e) {
+            msgDiv.innerText = "Error en el servidor. Inténtalo más tarde.";
+            msgDiv.style.color = 'var(--primary-red)';
+        }
+    }
+
+    function entrarInvitado() {
+        localStorage.setItem('usuarioLogueado', 'Invitado');
+        window.location.href = '/menu.html';
+    }
+
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        document.getElementById('theme-toggle').innerText = newTheme === 'dark' ? '🌙' : '☀️';
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+        document.getElementById('theme-toggle').innerText = currentTheme === 'dark' ? '🌙' : '☀️';
+    });
+</script>
+</body>
+</html>
