@@ -9,7 +9,30 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
 const PATH_DATOS = path.join(__dirname, 'datos.json');
-const PATH_USUARIOS = path.join(__dirname, 'usuarios.json');
+const PATH_USUARIOS = process.env.VERCEL 
+    ? '/tmp/usuarios.json' 
+    : path.join(__dirname, 'usuarios.json');
+
+// Inicializar usuarios.json en /tmp si es Vercel y no existe
+if (process.env.VERCEL) {
+    try {
+        const dir = path.dirname(PATH_USUARIOS);
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+        }
+        if (!fs.existsSync(PATH_USUARIOS)) {
+            const initialUsersPath = path.join(__dirname, 'usuarios.json');
+            let initialData = '[]';
+            if (fs.existsSync(initialUsersPath)) {
+                initialData = fs.readFileSync(initialUsersPath, 'utf8');
+            }
+            fs.writeFileSync(PATH_USUARIOS, initialData, 'utf8');
+        }
+    } catch (e) {
+        console.error('Error al inicializar usuarios.json en /tmp:', e);
+    }
+}
+
 
 // Auxiliar para leer JSONs de forma segura
 const leerJSON = (ruta) => JSON.parse(fs.readFileSync(ruta, 'utf8'));
@@ -136,6 +159,10 @@ app.post('/api/verificar-completar', (req, res) => {
     res.json({ correcto: esCorrecto });
 });
 
-app.listen(PORT, () => {
-    console.log(`Servidor con Login y Ranking en http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`Servidor con Login y Ranking en http://localhost:${PORT}`);
+    });
+}
+
+module.exports = app;
